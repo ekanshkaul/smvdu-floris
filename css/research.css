@@ -1,0 +1,91 @@
+/* =========================================================
+   SMVDU - BIO: RESEARCH & AUDIT STYLESHEET (research.css)
+   Carbon Analytics, Field Survey Timetables & Methodologies
+   ========================================================= */
+
+/* --- Audit Methodology Narrative Card --- */
+.audit-narrative-card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem 2.25rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+    position: relative;
+    border-top: 4px solid var(--primary);
+}
+
+.audit-narrative-card h2 {
+    font-size: 1.45rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+}
+
+.audit-narrative-card p {
+    font-size: 0.92rem;
+    color: var(--text-dark);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+}
+
+/* --- Methodology Indicator Badges --- */
+.methodology-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.method-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.method-pill i {
+    color: var(--primary);
+}
+
+/* --- Academic Citation Footnote Box --- */
+.citation-box {
+    background: var(--bg-secondary);
+    border: 1px dashed var(--accent-gold);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.citation-box strong {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dark);
+    display: block;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 680px) {
+    .audit-narrative-card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .methodology-pills {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

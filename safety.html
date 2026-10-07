@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toxicity &amp; Field Safety Protocols — SMVDU Floris</title>
+
+    <!-- Instant Theme Loader: Place this BEFORE your CSS links -->
+    <script>
+        (function() {
+            var saved = localStorage.getItem('smvdu_floris_theme');
+            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <meta name="theme-color" content="#1e4620">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Master CSS & Safety-Specific CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/safety.css">
+</head>
+<body>
+
+    <!-- Retractable Header Interface -->
+    <header class="home-header">
+        <div class="home-nav-container">
+            <!-- Retractable Nav Trigger Button -->
+            <button type="button" id="btn-toggle-menu" class="retractable-menu-btn" aria-label="Toggle Navigation Menu" title="Menu">
+                <i class="fa-solid fa-bars" id="menu-icon"></i>
+            </button>
+
+            <!-- Theme Toggle Button -->
+            <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Light/Dark Mode" title="Toggle Light/Dark Mode">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+
+        <!-- Retractable Drawer Panel -->
+        <nav id="retractable-nav-drawer" class="retractable-nav-drawer" aria-hidden="true">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="database.html"><i class="fa-solid fa-book-bookmark"></i> Flora Database</a></li>
+                <li><a href="maps.html"><i class="fa-solid fa-map-location-dot"></i> Vegetation Maps</a></li>
+                <li><a href="research.html"><i class="fa-solid fa-seedling"></i> Sustainability &amp; Audit</a></li>
+                <li><a href="safety.html"><i class="fa-solid fa-shield-halved"></i> Toxicity &amp; Safety</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="nexus-wrapper">
+
+        <!-- Header -->
+        <div class="db-header">
+            <div class="db-title">
+                <h1>CAMPUS <span>FLORA TOXICITY &amp; SAFETY</span></h1>
+                <div class="db-subtitle">
+                    <span class="db-subtitle-line"></span>
+                    <p>Field Researcher Hazard Classifications, Clinical First-Aid &amp; Exposure Triage</p>
+                </div>
+            </div>
+            <div class="status-chip" style="border-color: #fca5a5;">
+                <div class="status-dot" style="background: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+                <span style="color: var(--icon-fg-red);">CLINICAL PROTOCOLS // ACTIVE</span>
+            </div>
+        </div>
+
+        <!-- Safety Telemetry Grid -->
+        <div class="density-stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Documented Non-Toxic Species</div>
+                <div class="stat-value" style="color: var(--text-success);" id="safety-stat-safe">--</div>
+                <div class="density-meta">Safe for physical touch &amp; sampling</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="stat-label">Mild Irritant / Allergenic Taxa</div>
+                <div class="stat-value" id="safety-stat-irritant">--</div>
+                <div class="density-meta">Gloves required during quadrat cuts</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #ef4444;">
+                <div class="stat-label">High-Toxicity Scrub Taxa</div>
+                <div class="stat-value" style="color: var(--icon-fg-red);" id="safety-stat-toxic">--</div>
+                <div class="density-meta">Severe cardiotoxins &amp; alkaloids</div>
+            </div>
+            <div class="stat-card cyan">
+                <div class="stat-label">Campus Health Centre Distance</div>
+                <div class="stat-value">~450m</div>
+                <div class="density-meta">Medical emergency response corridor</div>
+            </div>
+        </div>
+
+        <!-- Emergency Protocols Action Strip -->
+        <section class="emergency-strip">
+            <div class="emergency-icon-box">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="emergency-text">
+                <h3>Campus Botanical Exposure Emergency Protocol</h3>
+                <p>
+                    In the event of any medical emergency, contact the <strong>SMVDU Medical Aid Centre</strong>.
+                </p>
+            </div>
+            <div class="emergency-actions">
+                <a
+    href="tel:+911991285524,,2222"
+    class="btn-action btn-danger"
+    id="medical-centre-call"
+    aria-label="Call SMVDU Medical Centre, extension 2222"
+    title="Call Medical Centre — Extension 2222"
+>
+    <i class="fa-solid fa-phone-volume"></i>
+    Medical Centre <span>(Ext. 2222)</span>
+</a>
+            </div>
+        </section>
+
+        <!-- Hazard Tier Filter Toolbar -->
+        <div class="safety-filter-bar">
+            <div class="tier-pills">
+                <button type="button" class="tier-pill active" id="btn-tier-all">All Profiles</button>
+                <button type="button" class="tier-pill tier-safe" id="btn-tier-safe">Non-Toxic (Safe)</button>
+                <button type="button" class="tier-pill tier-irritant" id="btn-tier-irritant">Mild Irritant</button>
+                <button type="button" class="tier-pill tier-toxic" id="btn-tier-toxic">Severe Toxic</button>
+            </div>
+            <div class="safety-search-wrap">
+                <input type="text" id="safety-search" placeholder="Search safety database by botanical name, Dogri, or toxin...">
+            </div>
+        </div>
+
+        <!-- Hazardous Species Detailed Cards Container -->
+        <section class="hazard-cards-container" id="hazard-cards-stage">
+            <!-- Populated dynamically via js/safety.js -->
+        </section>
+
+        <!-- Standard First Aid Guidelines Reference -->
+        <section class="density-table-card" style="margin-top: 2.5rem;">
+            <div class="table-header-bar">
+                <div class="table-title">
+                    <i class="fa-solid fa-kit-medical"></i> Standard Field Exposure Triage Table
+                </div>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Toxicity Profile</th>
+                            <th>Target Organs</th>
+                            <th>Common Clinical Symptoms</th>
+                            <th>Field Immediate Action</th>
+                            <th>Recommended Field PPE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="hazard-chip hazard-toxic">Toxic</span></td>
+                            <td>Ocular cornea, GI tract, cardiac rhythm</td>
+                            <td>Photophobia, corneal edema, burning sensation, bradycardia upon ingestion</td>
+                            <td>Copious ocular rinse for 15 min; immediate transfer to Health Centre</td>
+                            <td>Nitrile gloves &amp; splash safety goggles</td>
+                        </tr>
+                        <tr>
+                            <td><span class="hazard-chip hazard-irritant">Mild Irritant</span></td>
+                            <td>Epidermis, mucous membranes</td>
+                            <td>Contact erythema, pruritus, mild skin rash, pod-dust sneezing</td>
+                            <td>Wash with mild soap and ambient running water</td>
+                            <td>Standard cotton field gloves</td>
+                        </tr>
+                        <tr>
+                            <td><span class="hazard-chip hazard-safe">Safe</span></td>
+                            <td>None</td>
+                            <td>Physiologically inert for normal touch and herbarium mounting</td>
+                            <td>None required; wash hands after field transect</td>
+                            <td>Not required</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>SMVDU Floris Project</h4>
+                <p>Campus spatial ecology documentation conducted as an individual university project at Shri Mata Vaishno Devi University, Kakryal, Katra, J&amp;K – 182320.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="database.html">Flora Database</a></li>
+                    <li><a href="maps.html">Vegetation Maps</a></li>
+                    <li><a href="research.html">Sustainability &amp; Audit</a></li>
+                    <li><a href="safety.html">Toxicity &amp; Safety</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Institutional Contact</h4>
+                <p>Campus Flora Initiative<br>Email: <span style="color: #ffffff; font-weight: 500;">biodiversity@smvdu.ac.in</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/safety.js"></script>
+</body>
+</html>

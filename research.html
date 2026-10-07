@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability &amp; Ecological Audit — SMVDU Floris</title>
+
+    <!-- Instant Theme Loader: Place this BEFORE your CSS links -->
+    <script>
+        (function() {
+            var saved = localStorage.getItem('smvdu_floris_theme');
+            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <meta name="theme-color" content="#1e4620">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Typography & Iconography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Master CSS & Research-Specific CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/research.css">
+</head>
+<body>
+
+    <!-- Retractable Header Interface -->
+        <header class="home-header">
+        <div class="home-nav-container">
+            <!-- Retractable Nav Trigger Button -->
+            <button type="button" id="btn-toggle-menu" class="retractable-menu-btn" aria-label="Toggle Navigation Menu" title="Menu">
+                <i class="fa-solid fa-bars" id="menu-icon"></i>
+            </button>
+
+            <!-- Theme Toggle Button -->
+            <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Light/Dark Mode" title="Toggle Light/Dark Mode">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+
+        <!-- Retractable Drawer Panel -->
+        <nav id="retractable-nav-drawer" class="retractable-nav-drawer" aria-hidden="true">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="database.html"><i class="fa-solid fa-book-bookmark"></i> Flora Database</a></li>
+                <li><a href="maps.html"><i class="fa-solid fa-map-location-dot"></i> Vegetation Maps</a></li>
+                <li><a href="research.html"><i class="fa-solid fa-seedling"></i> Sustainability &amp; Audit</a></li>
+                <li><a href="safety.html"><i class="fa-solid fa-shield-halved"></i> Toxicity &amp; Safety</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="nexus-wrapper">
+
+        <!-- Header -->
+        <div class="db-header">
+            <div class="db-title">
+                <h1>CAMPUS <span>SUSTAINABILITY AUDIT</span></h1>
+                <div class="db-subtitle">
+                    <span class="db-subtitle-line"></span>
+                    <p>Carbon Sequestration Indices, Methodologies &amp; Survey Schedule</p>
+                </div>
+            </div>
+            <div class="status-chip">
+                <div class="status-dot"></div>
+                <span>AUDIT FRAMEWORK // PEER REVIEWED</span>
+            </div>
+        </div>
+
+        <!-- Telemetry Stats Grid -->
+        <div class="density-stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Estimated Carbon Sequestration</div>
+                <div class="stat-value">1,420 <span style="font-size: 1rem; font-weight: normal;">tCO₂e/yr</span></div>
+                <div class="density-meta">Chir Pine &amp; broadleaf stand yield</div>
+            </div>
+            <div class="stat-card gold">
+                <div class="stat-label">Shannon-Wiener Diversity (H')</div>
+                <div class="stat-value">3.18</div>
+                <div class="density-meta">High richness across 4 sectors</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="stat-label">Invasive Species Pressure</div>
+                <div class="stat-value">14.2%</div>
+                <div class="density-meta">Parthenium &amp; Lantana intrusion</div>
+            </div>
+            <div class="stat-card cyan">
+                <div class="stat-label">Scheduled Field Surveys</div>
+                <div class="stat-value">6 / 6</div>
+                <div class="density-meta">Seasonal phenology coverage</div>
+            </div>
+        </div>
+
+        <!-- Research Methodology Narrative -->
+        <article class="audit-narrative-card">
+            <h2><i class="fa-solid fa-microscope"></i> Ecological Sampling Methodology</h2>
+            <p>
+                Field documentation at Shri Mata Vaishno Devi University adheres to standardized quadrat sampling along elevation gradients spanning 780m to 880m MSL in the sub-Himalayan Shivalik zone. Biomass and carbon stock estimations utilize non-destructive allometric equations adapted from the Forest Survey of India (FSI) guidelines for <em>Pinus roxburghii</em> and subtropical mixed dry-deciduous formations.
+            </p>
+            <div class="methodology-pills">
+                <span class="method-pill"><i class="fa-solid fa-square-check"></i> Stratified Random Quadrats (10m x 10m)</span>
+                <span class="method-pill"><i class="fa-solid fa-compass"></i> Keyless Esri WGS84 Georeferencing</span>
+                <span class="method-pill"><i class="fa-solid fa-book-atlas"></i> Flora of Jammu &amp; Kashmir Reference</span>
+            </div>
+        </article>
+
+        <!-- Carbon Sequestration & Sector Breakdown -->
+        <section class="density-table-card" style="margin-bottom: 2rem;">
+            <div class="table-header-bar">
+                <div class="table-title">
+                    <i class="fa-solid fa-tree"></i> Biomass Carbon Allocation by Sector
+                </div>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sector Zone</th>
+                            <th>Hectares</th>
+                            <th>Dominant Biome</th>
+                            <th>Mean Tree DBH</th>
+                            <th>Annual Sequestration Rate</th>
+                            <th>Ecological Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: var(--sector-pine);"><i class="fa-solid fa-tree"></i> Pine Ridge Belt</strong></td>
+                            <td class="font-mono">~65 ha</td>
+                            <td>Subtropical Conifer Stand</td>
+                            <td class="font-mono">28.4 cm</td>
+                            <td class="font-mono">11.8 tCO₂/ha/yr</td>
+                            <td>Slope stabilization &amp; soil erosion control</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--sector-avenue);"><i class="fa-solid fa-road"></i> Academic Avenue</strong></td>
+                            <td class="font-mono">~35 ha</td>
+                            <td>Planted Deciduous Boulevard</td>
+                            <td class="font-mono">22.1 cm</td>
+                            <td class="font-mono">7.4 tCO₂/ha/yr</td>
+                            <td>Urban heat mitigation &amp; campus shade</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--sector-scrub);"><i class="fa-solid fa-leaf"></i> Lower Scrublands</strong></td>
+                            <td class="font-mono">~70 ha</td>
+                            <td>Dry Thorny Thicket</td>
+                            <td class="font-mono">9.5 cm</td>
+                            <td class="font-mono">3.2 tCO₂/ha/yr</td>
+                            <td>Drought barrier &amp; wild pollinator support</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--sector-ravine);"><i class="fa-solid fa-water"></i> Ravine Corridors</strong></td>
+                            <td class="font-mono">~20 ha</td>
+                            <td>Riparian Wetland Corridor</td>
+                            <td class="font-mono">14.6 cm</td>
+                            <td class="font-mono">6.1 tCO₂/ha/yr</td>
+                            <td>Hydrological catchment &amp; moisture buffer</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Field Survey Timetable -->
+        <section class="density-table-card">
+            <div class="table-header-bar">
+                <div class="table-title">
+                    <i class="fa-solid fa-calendar-check"></i> Field Survey Timetable // DYD Batch of 2026
+                </div>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Survey Phase</th>
+                            <th>Target Season</th>
+                            <th>Target Sectors</th>
+                            <th>Focus Phenology</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Phase I: Baseline Quadrats</strong></td>
+                            <td class="font-mono">Pre-Monsoon</td>
+                            <td>Pine Ridge &amp; Academic Avenue</td>
+                            <td>Foliage flush, conifer cone initiation</td>
+                            <td><span class="hazard-chip hazard-safe">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase II: Riparian Audit</strong></td>
+                            <td class="font-mono">Monsoon Peak</td>
+                            <td>Ravine Corridors &amp; Watercourses</td>
+                            <td>Fern emergence, flowering of shrubs</td>
+                            <td><span class="hazard-chip hazard-safe">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase III: Scrubland Census</strong></td>
+                            <td class="font-mono">Post-Monsoon</td>
+                            <td>Lower Scrublands Margin</td>
+                            <td>Seed maturation, pod setting in Acacia</td>
+                            <td><span class="hazard-chip hazard-safe">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase IV: Winter Dormancy</strong></td>
+                            <td class="font-mono">Winter Solstice</td>
+                            <td>Campus-wide Transects</td>
+                            <td>Deciduous leaf drop &amp; conifer needle density</td>
+                            <td><span class="hazard-chip hazard-safe">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase V: Spring Phenology</strong></td>
+                            <td class="font-mono">Early Spring</td>
+                            <td>Academic Avenue Boulevards</td>
+                            <td>Kachnar &amp; Amaltas flowering peak</td>
+                            <td><span class="hazard-chip hazard-safe">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase VI: Longitudinal Synthesis</strong></td>
+                            <td class="font-mono">Academic Year 2026</td>
+                            <td>Centralized Digital GIS</td>
+                            <td>Final baseline reconciliation (116 Taxa)</td>
+                            <td><span class="hazard-chip hazard-safe">Active Verification</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Citation Reference Box -->
+        <div class="citation-box">
+            <strong>Standard Institutional Citation Format:</strong>
+            DYD Batch of 2026. (2026). <em>SMVDU Floris: Campus Spatial Ecological Survey and Digital Herbarium Repository</em>. Shri Mata Vaishno Devi University, Kakryal, Katra, J&amp;K, India. Dataset Version 1.0. Click to copy citation.
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>SMVDU Floris Project</h4>
+                <p>Campus spatial ecology documentation conducted as an individual university project at Shri Mata Vaishno Devi University, Kakryal, Katra, J&amp;K – 182320.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="database.html">Flora Database</a></li>
+                    <li><a href="maps.html">Vegetation Maps</a></li>
+                    <li><a href="research.html">Sustainability &amp; Audit</a></li>
+                    <li><a href="safety.html">Toxicity &amp; Safety</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Institutional Contact</h4>
+                <p>Campus Flora Initiative<br>Email: <span style="color: #ffffff; font-weight: 500;">biodiversity@smvdu.ac.in</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/research.js"></script>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flora Database — SMVDU Floris | Digital Herbarium</title>
+
+    <!-- Instant Theme Loader: Place this BEFORE your CSS links -->
+    <script>
+        (function() {
+            var saved = localStorage.getItem('smvdu_floris_theme');
+            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <meta name="theme-color" content="#1e4620">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Master CSS & Database-Specific CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/database.css">
+</head>
+<body>
+
+    <!-- Retractable Header Interface -->
+<header class="home-header">
+        <div class="home-nav-container">
+            <!-- Retractable Nav Trigger Button -->
+            <button type="button" id="btn-toggle-menu" class="retractable-menu-btn" aria-label="Toggle Navigation Menu" title="Menu">
+                <i class="fa-solid fa-bars" id="menu-icon"></i>
+            </button>
+
+            <!-- Theme Toggle Button -->
+            <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Light/Dark Mode" title="Toggle Light/Dark Mode">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+
+        <!-- Retractable Drawer Panel -->
+        <nav id="retractable-nav-drawer" class="retractable-nav-drawer" aria-hidden="true">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="database.html"><i class="fa-solid fa-book-bookmark"></i> Flora Database</a></li>
+                <li><a href="maps.html"><i class="fa-solid fa-map-location-dot"></i> Vegetation Maps</a></li>
+                <li><a href="research.html"><i class="fa-solid fa-seedling"></i> Sustainability &amp; Audit</a></li>
+                <li><a href="safety.html"><i class="fa-solid fa-shield-halved"></i> Toxicity &amp; Safety</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="nexus-wrapper">
+
+        <!-- Header -->
+        <div class="db-header">
+            <div class="db-title">
+                <h1>CAMPUS <span>FLORA REPOSITORY</span></h1>
+                <div class="db-subtitle">
+                    <span class="db-subtitle-line"></span>
+                    <p>Standardized Taxonomy, Vernacular Ethnobotany, QR Anchors &amp; Field Plaques</p>
+                </div>
+            </div>
+            <div class="status-chip">
+                <div class="status-dot"></div>
+                <span id="db-active-sync-badge">DATA ENGINE // PERSISTENT</span>
+            </div>
+        </div>
+
+        <!-- Telemetry Stats Grid -->
+        <div class="density-stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Documented Specimens</div>
+                <div class="stat-value" id="db-stat-total">116</div>
+                <div class="density-meta">Cataloged vascular flora</div>
+            </div>
+            <div class="stat-card gold">
+                <div class="stat-label">Core Botanical Families</div>
+                <div class="stat-value" id="db-stat-families">50+</div>
+                <div class="density-meta">Pinaceae, Fabaceae, Apocynaceae...</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="stat-label">Field Observations Logged</div>
+                <div class="stat-value" id="db-stat-observations">116</div>
+                <div class="density-meta">GPS-anchored specimens</div>
+            </div>
+            <div class="stat-card cyan">
+                <div class="stat-label">Currently Filtered</div>
+                <div class="stat-value" id="db-stat-visible">116</div>
+                <div class="density-meta">Matching query parameters</div>
+            </div>
+        </div>
+
+        <!-- Toolbar & Filter Console -->
+        <div class="db-filter-console">
+            <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="flora-search" placeholder="Search by botanical name, common name, Dogri vernacular, or family..." autocomplete="off">
+            </div>
+
+            <!-- Filters Dropdown Button -->
+            <div style="position: relative;">
+                <button type="button" id="btn-filters" class="btn-action btn-outline" title="Filter by Ecological Sector, Habit, or Toxicity">
+                    <i class="fa-solid fa-sliders"></i> Filters
+                </button>
+                <div id="filters-dropdown" class="filters-dropdown" style="display: none;">
+                    <div class="dropdown-section">
+                        <label for="filter-zone" class="dropdown-label">Ecological Sector</label>
+                        <select id="filter-zone" class="select-filter dropdown-select">
+                            <option value="ALL">All Ecological Sectors</option>
+                            <option value="Pine Ridge Belt">Pine Ridge Belt</option>
+                            <option value="Academic Avenue">Academic Avenue</option>
+                            <option value="Lower Scrublands">Lower Scrublands</option>
+                            <option value="Ravine Corridors">Ravine Corridors</option>
+                        </select>
+                    </div>
+
+<div class="dropdown-section filter-reset-section">
+    <button
+        type="button"
+        id="btn-reset-filters"
+        class="btn-action btn-outline filter-reset-btn"
+        title="Reset all search and filter parameters"
+    >
+        <i class="fa-solid fa-rotate-left"></i>
+        Reset Filters
+    </button>
+</div>
+
+                    <div class="dropdown-section">
+                        <label for="filter-habit" class="dropdown-label">Plant Habit</label>
+                        <select id="filter-habit" class="select-filter dropdown-select">
+                            <option value="ALL">All Habits</option>
+                            <option value="Tree">Tree</option>
+                            <option value="Shrub">Shrub</option>
+                            <option value="Herb">Herb</option>
+                            <option value="Climber">Climber</option>
+                        </select>
+                    </div>
+
+                    <div class="dropdown-section">
+                        <label for="filter-toxicity" class="dropdown-label">Toxicity Profile</label>
+                        <select id="filter-toxicity" class="select-filter dropdown-select">
+                            <option value="ALL">All Toxicity Profiles</option>
+                            <option value="Safe">Safe</option>
+                            <option value="Mild Irritant">Mild Irritant</option>
+                            <option value="Toxic">Toxic</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-dropdown-group" style="margin-left: auto;">
+                <button type="button" id="btn-open-modal" class="btn-action">
+                    <i class="fa-solid fa-plus"></i> Log Obs.
+                </button>
+
+                <button type="button" id="btn-export-csv" class="btn-action btn-outline" title="Export current catalog to CSV spreadsheet">
+                    <i class="fa-solid fa-file-csv"></i> +CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabular Database Card with Sealed Pagination -->
+        <section class="density-table-card">
+            <div class="table-header-bar">
+                <div class="table-title">
+                    <i class="fa-solid fa-table-list"></i> Cataloged Campus Taxa Ledger
+                </div>
+            </div>
+
+            <div class="table-scroll">
+                <table id="db-main-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Specimen</th>
+                            <th>Dogri Vernacular</th>
+                            <th>Family</th>
+                            <th>Habit</th>
+                            <th>Sector Zone</th>
+                            <th>Toxicity Profile</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flora-table-body">
+                        <!-- Populated dynamically via js/database.js -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Clean Table Pagination Bar -->
+            <div class="table-pagination-bar">
+                <div class="pagination-info" id="pagination-info">
+                    Showing <strong>1–15</strong> of <strong>116</strong> specimens
+                </div>
+                <div class="pagination-controls">
+                    <button type="button" id="btn-prev-page" class="pagination-btn" title="Previous Page" disabled>
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <span class="pagination-page-indicator">
+                        Page <span id="current-page-num" class="font-mono">1</span> of <span id="total-pages-num" class="font-mono">8</span>
+                    </span>
+                    <button type="button" id="btn-next-page" class="pagination-btn" title="Next Page">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Specimen Detailed Inspection Modal Card -->
+    <div id="specimen-card-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-dialog" style="max-width: 620px;">
+            <div class="modal-header">
+                <h3 id="modal-card-botanical"><i class="fa-solid fa-seedling"></i> Specimen Details</h3>
+                <button type="button" id="btn-close-card-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-form" style="padding: 1.5rem;">
+                <div id="modal-card-photo-container" style="display: none; margin-bottom: 1.25rem; text-align: center;">
+                    <img id="modal-card-photo" src="" alt="Specimen Photo" style="max-height: 220px; width: 100%; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                    <span id="modal-card-id" class="font-mono" style="font-weight: 700; color: var(--primary);">SMVDU-FL-001</span>
+                    <span id="modal-card-toxicity" class="hazard-chip hazard-safe">Safe</span>
+                </div>
+                <div id="modal-card-common" style="font-size: 1.05rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.2rem;">Chir Pine</div>
+                <div id="modal-card-dogri" class="dogri-badge">Dogri: Cheel</div>
+
+                <div class="meta-details-list" style="margin-top: 1rem;">
+                    <div class="meta-row"><span class="meta-key">Family</span><span class="meta-val" id="modal-card-family">Pinaceae</span></div>
+                    <div class="meta-row"><span class="meta-key">Habit</span><span class="meta-val" id="modal-card-habit">Tree</span></div>
+                    <div class="meta-row"><span class="meta-key">Sector Zone</span><span class="meta-val" id="modal-card-zone">Pine Ridge Belt</span></div>
+                    <div class="meta-row"><span class="meta-key">Elevation</span><span class="meta-val font-mono" id="modal-card-elevation">840m MSL</span></div>
+                    <div class="meta-row"><span class="meta-key">GPS Location</span><span class="meta-val font-mono" id="modal-card-coords">32.94310° N, 74.95420° E</span></div>
+                    <div class="meta-row"><span class="meta-key">IUCN Status</span><span class="meta-val" id="modal-card-iucn">LC</span></div>
+                </div>
+
+                <div style="margin-top: 1rem;">
+                    <span class="meta-key">Phenology Schedule</span>
+                    <p id="modal-card-phenology" style="font-size: 0.85rem; color: var(--text-dark); margin-top: 0.2rem;">--</p>
+                </div>
+
+                <div style="margin-top: 0.75rem;">
+                    <span class="meta-key">Ethnobotanical / Field Notes</span>
+                    <p id="modal-card-notes" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">--</p>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 1.5rem;">
+                    <a id="modal-card-maplink" href="#" class="btn-action btn-outline"><i class="fa-solid fa-map-location-dot"></i> GIS Map</a>
+                    <button type="button" id="modal-card-printbtn" class="btn-action"><i class="fa-solid fa-print"></i> Print 4x6 Plaque</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dedicated Specimen QR Code & Field Tagging Modal -->
+    <div id="specimen-qr-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-dialog" style="max-width: 440px; text-align: center;">
+            <div class="modal-header">
+                <h3 id="qr-modal-title"><i class="fa-solid fa-qrcode"></i> Specimen QR Tag</h3>
+                <button type="button" id="btn-close-specimen-qr" class="modal-close">&times;</button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div style="margin-bottom: 1rem;">
+                    <span id="qr-modal-id" class="font-mono" style="font-weight: 700; color: var(--primary); font-size: 0.85rem;">SMVDU-FL-001</span>
+                    <h4 id="qr-modal-botanical" style="font-style: italic; font-size: 1.15rem; color: var(--text-heading); margin-top: 0.2rem;">Pinus roxburghii</h4>
+                    <p id="qr-modal-common" style="font-size: 0.85rem; color: var(--text-muted);">Chir Pine (Cheel)</p>
+                </div>
+
+                <div class="qr-frame" style="display: inline-block; padding: 10px; background: #ffffff; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
+                    <img id="specimen-qr-image" src="" alt="Specimen QR Code" style="width: 200px; height: 200px; display: block;">
+                </div>
+
+                <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1.25rem;">
+                    Scan with any smartphone camera or campus terminal to instantly open this specimen's field telemetry and GPS location.
+                </p>
+
+                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                    <button type="button" id="btn-download-qr" class="btn-action btn-outline">
+                        <i class="fa-solid fa-download"></i> Save PNG
+                    </button>
+                    <button type="button" id="btn-print-qr-plaque" class="btn-action">
+                        <i class="fa-solid fa-print"></i> Print 4x6 Plaque
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Field Observation Intake Modal with One-Tap GPS and Photo Uploader -->
+    <div id="observation-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-clipboard-check"></i> Field Specimen Observation Intake</h3>
+                <button type="button" id="btn-close-modal" class="modal-close">&times;</button>
+            </div>
+            <form id="form-add-specimen" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-botanical">Botanical Name (Scientific) *</label>
+                        <input type="text" id="input-botanical" placeholder="e.g. Pinus roxburghii" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-common">Common English Name *</label>
+                        <input type="text" id="input-common" placeholder="e.g. Chir Pine" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-dogri">Dogri Vernacular Name</label>
+                        <input type="text" id="input-dogri" placeholder="e.g. Cheel">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-family">Botanical Family *</label>
+                        <input type="text" id="input-family" placeholder="e.g. Pinaceae" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-habit">Plant Habit *</label>
+                        <select id="input-habit" required>
+                            <option value="Tree">Tree</option>
+                            <option value="Shrub">Shrub</option>
+                            <option value="Herb">Herb</option>
+                            <option value="Climber">Climber</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-zone">Ecological Sector Zone *</label>
+                        <select id="input-zone" required>
+                            <option value="Pine Ridge Belt">Pine Ridge Belt</option>
+                            <option value="Academic Avenue">Academic Avenue</option>
+                            <option value="Lower Scrublands">Lower Scrublands</option>
+                            <option value="Ravine Corridors">Ravine Corridors</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-toxicity">Toxicity Assessment *</label>
+                        <select id="input-toxicity" required>
+                            <option value="Safe">Safe</option>
+                            <option value="Mild Irritant">Mild Irritant</option>
+                            <option value="Toxic">Toxic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-elevation">Elevation Range</label>
+                        <input type="text" id="input-elevation" placeholder="e.g. 840m MSL">
+                    </div>
+                </div>
+
+                <!-- GPS Field Auto-Acquire Module -->
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <span class="font-mono" style="font-size: 0.75rem; font-weight: 700; color: var(--primary);">
+                            <i class="fa-solid fa-location-crosshairs"></i> SPATIAL SATELLITE FIX
+                        </span>
+                        <button type="button" id="btn-acquire-gps" class="btn-action btn-outline" style="font-size: 0.72rem; padding: 0.25rem 0.6rem;">
+                            <i class="fa-solid fa-crosshairs"></i> Get Current GPS
+                        </button>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 0;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="input-lat">Latitude (WGS84) *</label>
+                            <input type="number" step="0.00001" id="input-lat" placeholder="32.94190" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="input-lng">Longitude (WGS84) *</label>
+                            <input type="number" step="0.00001" id="input-lng" placeholder="74.95380" required>
+                        </div>
+                    </div>
+                    <div id="gps-status-msg" class="font-mono" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem;">
+                        Manual entry active or click "Get Current GPS" during field sampling.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-photo">Field Specimen Photo (Auto-Compressed for LocalStorage)</label>
+                    <input type="file" id="input-photo" accept="image/*">
+                    <div id="photo-preview-wrap" style="display: none; margin-top: 0.5rem; align-items: center; gap: 0.75rem;">
+                        <img id="photo-preview-img" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);" alt="Compressed Preview">
+                        <span id="photo-status" class="font-mono" style="font-size: 0.72rem; color: var(--text-muted);">Optimized</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-notes">Ecological Field Observations &amp; Ethnobotanical Use</label>
+                    <textarea id="input-notes" rows="3" placeholder="Provide notes on bark texture, phenological flowering stage, traditional medicinal utility, or micro-habitat context..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="btn-cancel-modal" class="btn-action btn-outline">Cancel</button>
+                    <button type="submit" class="btn-action"><i class="fa-solid fa-floppy-disk"></i> Commit Observation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hidden Printable 4x6 Plaque Template -->
+    <div id="plaque-print-stage" class="print-only"></div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>SMVDU Floris Project</h4>
+                <p>Campus spatial ecology documentation conducted as an individual university project at Shri Mata Vaishno Devi University, Kakryal, Katra, J&amp;K – 182320.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="database.html">Flora Database</a></li>
+                    <li><a href="maps.html">Vegetation Maps</a></li>
+                    <li><a href="research.html">Sustainability &amp; Audit</a></li>
+                    <li><a href="safety.html">Toxicity &amp; Safety</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Institutional Contact</h4>
+                <p>Campus Flora Initiative<br>Email: <span style="color: #ffffff; font-weight: 500;">biodiversity@smvdu.ac.in</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts: data engine MUST load before database controller -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/database.js"></script>
+</body>
+</html>

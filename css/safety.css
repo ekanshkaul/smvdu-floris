@@ -1,0 +1,293 @@
+/* =========================================================
+   SMVDU - BIO: TOXICITY & SAFETY STYLESHEET (css/safety.css)
+   Clinical Hazard Tiers, Emergency Strip, First-Aid Boxes
+   & Toxicological Species Profile Cards
+   ========================================================= */
+
+/* --- Emergency Alert Strip --- */
+.emergency-strip {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 5px solid #ef4444;
+    border-radius: 8px;
+    padding: 1.4rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.emergency-icon-box {
+    width: 48px;
+    height: 48px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.emergency-text {
+    flex: 1;
+    min-width: 280px;
+}
+
+.emergency-text h3 {
+    font-size: 1.15rem;
+    color: #991b1b;
+    margin-bottom: 0.35rem;
+    font-weight: 700;
+}
+
+.emergency-text p {
+    font-size: 0.92rem;
+    color: #7f1d1d;
+    line-height: 1.55;
+}
+
+[data-theme="dark"] .emergency-strip {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.35);
+    border-left-color: #ef4444;
+}
+
+[data-theme="dark"] .emergency-icon-box {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+}
+
+[data-theme="dark"] .emergency-text h3 {
+    color: #f87171;
+}
+
+[data-theme="dark"] .emergency-text p {
+    color: #fca5a5;
+}
+.emergency-actions {
+    flex-shrink: 0;
+}
+
+/* --- Hazard Filter & Search Bar --- */
+.safety-filter-bar {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1.1rem 1.35rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tier-pills {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.tier-pill {
+    padding: 0.45rem 1rem;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+}
+
+.tier-pill:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-color);
+}
+
+.tier-pill.active {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.tier-pill.tier-safe.active {
+    background: #15803d;
+    border-color: #15803d;
+    color: #ffffff;
+}
+
+.tier-pill.tier-irritant.active {
+    background: #d97706;
+    border-color: #d97706;
+    color: #ffffff;
+}
+
+.tier-pill.tier-toxic.active {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+}
+
+.safety-search-wrap {
+    flex: 1;
+    min-width: 260px;
+    max-width: 420px;
+}
+
+/* --- Hazard Profile Cards Grid --- */
+.hazard-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+}
+
+.hazard-profile-card {
+    background: var(--surface);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.hazard-profile-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Tier Border Accents */
+.hazard-profile-card.border-safe {
+    border-top: 5px solid #15803d;
+}
+
+.hazard-profile-card.border-irritant {
+    border-top: 5px solid #d97706;
+}
+
+.hazard-profile-card.border-toxic {
+    border-top: 5px solid #dc2626;
+}
+
+.hazard-card-header {
+    padding: 0.95rem 1.25rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hazard-card-body {
+    padding: 1.25rem 1.25rem 1rem 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.hazard-botanical-name {
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--primary);
+    line-height: 1.3;
+}
+
+/* Active Compound Callout */
+.toxin-agent-box {
+    margin-top: 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 5px;
+    padding: 0.75rem 0.95rem;
+}
+
+.toxin-agent-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.toxin-agent-val {
+    font-size: 0.88rem;
+    color: var(--text-heading);
+    margin-top: 0.25rem;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+/* Clinical First-Aid Action Box */
+.first-aid-box {
+    margin-top: 0.85rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 0.75rem 0.95rem;
+    font-size: 0.86rem;
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+.first-aid-box strong {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.3rem;
+}
+
+.hazard-card-footer {
+    padding: 0.85rem 1.25rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 680px) {
+    .emergency-strip {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem;
+    }
+
+    .emergency-actions {
+        width: 100%;
+    }
+
+    .emergency-actions .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .safety-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .safety-search-wrap {
+        max-width: 100%;
+    }
+
+    .hazard-cards-container {
+        grid-template-columns: 1fr;
+    }
+}

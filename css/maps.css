@@ -1,0 +1,632 @@
+/* =========================================================
+   SMVDU Floris: MAPS ENGINE STYLESHEET (css/maps.css)
+   Pill Controls, Fixed Viewport, Overlay Inspector Sidebar
+   & Leaflet Clustering Aesthetics
+   ========================================================= */
+
+/* --- GIS Control Toolbar & Pill Buttons --- */
+.map-control-strip {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.map-control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.map-control-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.button-pill-group {
+    display: inline-flex;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.pill-btn {
+    border: none;
+    background: transparent;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+}
+
+.pill-btn:hover {
+    color: var(--text-dark);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.pill-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Coordinate Pinpoint Readout Bar */
+.pinpoint-bar {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 0.55rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.84rem;
+    color: var(--text-dark);
+}
+
+/* --- Map Viewport & Stage --- */
+.map-viewport-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    min-height: 520px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    background: var(--bg-secondary);
+}
+
+.map-viewport-container--tall {
+    height: 62vh;
+    min-height: 500px;
+}
+
+.map-canvas {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* --- Floating Inspector Overlay Sidebar --- */
+.map-sidebar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 340px;
+    max-width: calc(100% - 28px);
+    max-height: calc(100% - 28px);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.map-sidebar.collapsed {
+    transform: translateX(380px);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar-header {
+    padding: 0.95rem 1.15rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h3 {
+    font-size: 0.98rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.sidebar-body {
+    padding: 1.15rem;
+    overflow-y: auto;
+}
+
+.sidebar-toggle-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 990;
+    background: var(--surface);
+    color: var(--primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.5rem 0.85rem;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+}
+
+/* Metadata Key-Value List in Inspector */
+.meta-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.84rem;
+}
+
+.meta-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.meta-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.meta-val {
+    color: var(--text-dark);
+}
+
+/* --- Leaflet Marker Clusters & Pin Nodes --- */
+.custom-gis-pin-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gis-pin-node {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    color: #ffffff;
+    transition: transform 0.2s ease;
+}
+
+.gis-pin-node:hover {
+    transform: scale(1.2);
+}
+
+.gis-pin-node.marker-safe { background-color: #15803d; }
+.gis-pin-node.marker-irritant { background-color: #d97706; }
+.gis-pin-node.marker-toxic { background-color: #dc2626; }
+
+/* GIS Leaflet Popup Card */
+.gis-popup-card {
+    min-width: 220px;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.gis-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+/* Tooltip on Hovering Sectors */
+.sector-map-tooltip {
+    background: rgba(17, 24, 39, 0.9) !important;
+    border: none !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-size: 0.76rem !important;
+    padding: 4px 8px !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .map-control-strip {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .map-control-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .map-viewport-container {
+        height: 480px;
+    }
+
+    .map-sidebar {
+        top: 8px;
+        right: 8px;
+        left: 8px;
+        width: auto;
+        max-height: 50%;
+    }
+}
+/* --- Fix Toolbar Alignment into a Single Row --- */
+.map-control-strip {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 1.25rem;
+}
+
+.map-control-group:last-child {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* --- Fix Marker Cluster Visual Nodes --- */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+    background-clip: padding-box;
+    border-radius: 20px;
+}
+
+.marker-cluster-small {
+    background-color: rgba(34, 197, 94, 0.4);
+}
+.marker-cluster-small div {
+    background-color: rgba(21, 128, 61, 0.9);
+    color: #ffffff;
+}
+
+.marker-cluster-medium {
+    background-color: rgba(234, 179, 8, 0.4);
+}
+.marker-cluster-medium div {
+    background-color: rgba(161, 98, 7, 0.9);
+    color: #ffffff;
+}
+
+.marker-cluster-large {
+    background-color: rgba(249, 115, 22, 0.4);
+}
+.marker-cluster-large div {
+    background-color: rgba(194, 65, 12, 0.9);
+    color: #ffffff;
+}
+
+.marker-cluster div {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    margin-top: 5px;
+    text-align: center;
+    border-radius: 15px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 30px;
+}
+
+/* Ensure Canvas Stays Inside Frame */
+.leaflet-container {
+    font-family: 'Inter', system-ui, sans-serif !important;
+    background: var(--bg-secondary);
+}
+/* --- Field State Recovery Notification Toast --- */
+.field-restore-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--accent-gold);
+    border-left: 5px solid var(--primary);
+    border-radius: 6px;
+    padding: 0.75rem 1.25rem;
+    box-shadow: var(--shadow-lg);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    animation: toastFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-toast {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+@keyframes toastFadeIn {
+    from { opacity: 0; transform: translate(-50%, 15px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+/* =========================================================
+   SMVDU Floris: Compact Mobile Maps & Toast Overrides
+   ========================================================= */
+
+@media (max-width: 768px) {
+    /* Make toolbar pills fit horizontally or wrap neatly */
+    .map-control-strip {
+        padding: 0.5rem 0.75rem;
+        gap: 0.5rem;
+    }
+
+    .map-control-group {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 0.35rem;
+    }
+
+    .map-control-label {
+        font-size: 0.68rem;
+    }
+
+    .pill-btn {
+        padding: 0.25rem 0.55rem;
+        font-size: 0.72rem;
+    }
+
+    /* Compact Pinpoint bar */
+    .pinpoint-bar {
+        font-size: 0.76rem;
+        padding: 0.35rem 0.65rem;
+    }
+
+    /* Scale down the Session Recovery Toast so it doesn't clip on small screens */
+    .field-restore-toast {
+        width: 90%;
+        max-width: 340px;
+        bottom: 12px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.78rem;
+        gap: 0.5rem;
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .toast-actions {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-toast {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+    }
+}
+/* =========================================================
+   SMVDU Floris: Maps Dark Mode Surface Overrides
+   ========================================================= */
+
+[data-theme="dark"] .pill-btn {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .pill-btn:hover {
+    color: var(--text-dark);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .meta-row {
+    border-bottom-color: var(--border-subtle) !important;
+}
+
+[data-theme="dark"] .meta-val {
+    color: var(--text-dark) !important;
+}
+
+/* Fix table row highlighting in map research table */
+[data-theme="dark"] .table-scroll tr:hover td {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* --- Leaflet Zoom Control: theme-aware (Leaflet's own CSS ships un-themed) --- */
+.leaflet-control-zoom {
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.leaflet-control-zoom a {
+    background-color: var(--surface) !important;
+    color: var(--text-dark) !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: var(--bg-hover) !important;
+    color: var(--primary) !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+    border-color: var(--border-color) !important;
+}
+
+/* --- Settings Dropdown Menu (Map Layer Selection + Advanced) --- */
+.map-settings-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1001;
+    min-width: 200px;
+    padding: 0;
+}
+
+.dropdown-section {
+    padding: 0.75rem 0.85rem;
+}
+
+.dropdown-section:first-child {
+    padding-top: 0.85rem;
+}
+
+.dropdown-section:last-child {
+    padding-bottom: 0.85rem;
+}
+
+.dropdown-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.layer-option,
+.dropdown-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem 0.65rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+    margin-bottom: 0.35rem;
+}
+
+.layer-option:last-child,
+.dropdown-action:last-child {
+    margin-bottom: 0;
+}
+
+.layer-option:hover,
+.dropdown-action:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-subtle);
+}
+
+.layer-option.active {
+    background: var(--primary-muted);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 0.5rem 0;
+}
+
+/* Dark mode: dropdown surfaces & text */
+[data-theme="dark"] .map-settings-dropdown {
+    background: var(--surface);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .layer-option,
+[data-theme="dark"] .dropdown-action {
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .layer-option:hover,
+[data-theme="dark"] .dropdown-action:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .layer-option.active {
+    background: rgba(45, 106, 48, 0.25);
+    border-color: var(--primary-light);
+    color: var(--primary-light);
+}
+
+/* Leaflet popups (specimen click-through) */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background: var(--surface) !important;
+    color: var(--text-dark) !important;
+}
+/* Icon-only action button sizing */
+.btn-icon-only {
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.btn-icon-only i {
+    font-size: 0.9rem;
+    margin: 0;
+}
