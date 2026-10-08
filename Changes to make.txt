@@ -1,5 +1,0 @@
-Index page redesign 
-1. The navigation bar will be a retractable button. The button will have a slight dark shadow (in light mode) or a slight light shadow (in dark mode)
-2. The top center of the page will have the title -- SMVDU FLORIS
-3. Then below will be the details about the website and its purpose
-4. The last (above the footer), will contain the consolidated data that is currently displayed at the top.
