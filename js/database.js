@@ -101,6 +101,82 @@ document.addEventListener('DOMContentLoaded', () => {
         return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(dataString)}&margin=1`;
     }
 
+    // Helper: tolerant coordinate reader (handles coords[], or lat/lng records)
+    function getCoords(item) {
+        if (item && Array.isArray(item.coords) && item.coords.length >= 2) {
+            const a = parseFloat(item.coords[0]), b = parseFloat(item.coords[1]);
+            if (!isNaN(a) && !isNaN(b)) return [a, b];
+        }
+        const a = parseFloat(item && item.lat), b = parseFloat(item && item.lng);
+        if (!isNaN(a) && !isNaN(b)) return [a, b];
+        return [32.94190, 74.95380];
+    }
+
+    // Helper: QR as a PNG data-URL generated locally (instant, offline-safe,
+    // no half-loaded remote image). Falls back to the remote API if the lib is missing.
+    function buildQrDataUrl(text, px = 220) {
+        if (typeof qrcode === 'function') {
+            try {
+                const qr = qrcode(0, 'M');
+                qr.addData(text);
+                qr.make();
+                const n = qr.getModuleCount();
+                const margin = 2;
+                const cell = Math.max(3, Math.ceil(px / (n + margin * 2)));
+                const size = (n + margin * 2) * cell;
+                const cv = document.createElement('canvas');
+                cv.width = cv.height = size;
+                const ctx = cv.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, size, size);
+                ctx.fillStyle = '#000000';
+                for (let r = 0; r < n; r++) {
+                    for (let c = 0; c < n; c++) {
+                        if (qr.isDark(r, c)) ctx.fillRect((c + margin) * cell, (r + margin) * cell, cell, cell);
+                    }
+                }
+                return cv.toDataURL('image/png');
+            } catch (err) {
+                console.warn('Local QR generation failed, using remote API:', err);
+            }
+        }
+        return getQrCodeUrl(text, px);
+    }
+
+    // Helpers: modal open/close that never leave the page scroll-locked
+    function showModal(el) {
+        if (!el) return;
+        // Re-parent to <html> so no transformed/filtered ancestor (e.g. body) can break position:fixed
+        if (el.parentNode !== document.documentElement) document.documentElement.appendChild(el);
+        el.classList.add('modal-open');
+        el.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Safety net: if it still isn't pinned to the viewport, pin it manually
+        const r = el.getBoundingClientRect();
+        if (Math.abs(r.top) > 1 || Math.abs(r.left) > 1 || r.height < window.innerHeight - 2) {
+            el.style.position = 'absolute';
+            el.style.bottom = 'auto';
+            el.style.right = 'auto';
+            el.style.width = window.innerWidth + 'px';
+            el.style.height = window.innerHeight + 'px';
+            el.style.top = (window.pageYOffset) + 'px';
+            el.style.left = (window.pageXOffset) + 'px';
+        }
+    }
+    function hideModal(el) {
+        if (!el) return;
+        el.classList.remove('modal-open');
+        el.style.display = 'none';
+        ['position','top','left','right','bottom','width','height'].forEach(p => el.style[p] = '');
+        const anyOpen = [cardModal, qrModal, observationModal].some(m => m && m.classList.contains('modal-open'));
+        if (!anyOpen) document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        [cardModal, qrModal, observationModal].forEach(m => { if (m && m.classList.contains('modal-open')) hideModal(m); });
+    });
+
     // ==========================================
     // 1. One-Tap High-Accuracy GPS Auto-Fill
     // ==========================================
@@ -288,22 +364,22 @@ document.addEventListener('DOMContentLoaded', () => {
             tableBody.appendChild(tr);
         });
 
-        document.querySelectorAll('.btn-view-card').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.currentTarget.getAttribute('data-id');
-                const target = currentFilteredRecords.find(r => r.id === id);
-                if (target) openSpecimenModal(target);
-            });
-        });
-
-        document.querySelectorAll('.btn-open-qr').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.currentTarget.getAttribute('data-id');
-                const target = currentFilteredRecords.find(r => r.id === id);
-                if (target) openSpecimenQrModal(target);
-            });
-        });
     }
+
+    // Delegated row-action handler (robust on touch devices & after re-renders)
+    tableBody?.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-id]');
+        if (!btn || !tableBody.contains(btn)) return;
+        const id = btn.getAttribute('data-id');
+        const target = getFloraData().find(r => r.id === id);
+        if (!target) return;
+        try {
+            if (btn.classList.contains('btn-view-card')) openSpecimenModal(target);
+            else if (btn.classList.contains('btn-open-qr')) openSpecimenQrModal(target);
+        } catch (err) {
+            console.error('Row action failed:', err);
+        }
+    });
 
     btnPrevPage?.addEventListener('click', () => {
         if (currentPage > 1) {
@@ -330,21 +406,19 @@ document.addEventListener('DOMContentLoaded', () => {
         activeQrItem = item;
 
         const deepLink = getSpecimenDeepLink(item.id);
-        const qrUrl = getQrCodeUrl(deepLink, 220);
+        const qrUrl = buildQrDataUrl(deepLink, 220);
 
         if (qrModalId) qrModalId.textContent = item.id;
         if (qrModalBotanical) qrModalBotanical.textContent = item.botanicalName;
         if (qrModalCommon) qrModalCommon.textContent = `${item.commonName} ${item.dogriName ? `(${item.dogriName})` : ''}`;
         if (qrModalImg) qrModalImg.src = qrUrl;
 
-        qrModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        showModal(qrModal);
     }
 
     function closeSpecimenQrModal() {
         if (!qrModal) return;
-        qrModal.style.display = 'none';
-        document.body.style.overflow = '';
+        hideModal(qrModal);
         activeQrItem = null;
     }
 
@@ -358,7 +432,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = document.createElement('a');
         link.href = qrModalImg.src;
         link.download = `QR_${activeQrItem.id}_${activeQrItem.botanicalName.replace(/\s+/g, '_')}.png`;
-        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -375,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     function openSpecimenModal(item) {
         if (!cardModal) return;
+        const [lat, lng] = getCoords(item);
 
         document.getElementById('modal-card-botanical').innerHTML = `<i class="fa-solid fa-seedling"></i> ${escapeHtml(item.botanicalName)}`;
         document.getElementById('modal-card-id').textContent = item.id;
@@ -384,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modal-card-habit').textContent = item.habit || 'N/A';
         document.getElementById('modal-card-zone').textContent = item.zone || 'N/A';
         document.getElementById('modal-card-elevation').textContent = item.elevation || '820m MSL';
-        document.getElementById('modal-card-coords').textContent = `${item.coords[0].toFixed(5)}° N, ${item.coords[1].toFixed(5)}° E`;
+        document.getElementById('modal-card-coords').textContent = `${lat.toFixed(5)}° N, ${lng.toFixed(5)}° E`;
         document.getElementById('modal-card-iucn').textContent = item.iucn || 'LC';
         document.getElementById('modal-card-phenology').textContent = item.phenology || 'Standard foothill phenological pattern.';
         document.getElementById('modal-card-notes').textContent = item.notes || 'Specimen documented under campus survey framework.';
@@ -404,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const mapLink = document.getElementById('modal-card-maplink');
         if (mapLink) {
-            mapLink.href = `maps.html?lat=${item.coords[0]}&lng=${item.coords[1]}&id=${encodeURIComponent(item.id)}`;
+            mapLink.href = `maps.html?lat=${lat}&lng=${lng}&id=${encodeURIComponent(item.id)}`;
         }
 
         const printBtn = document.getElementById('modal-card-printbtn');
@@ -412,14 +486,15 @@ document.addEventListener('DOMContentLoaded', () => {
             printBtn.onclick = () => printBotanicalPlaque(item);
         }
 
-        cardModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        showModal(cardModal);
+        const dlg = cardModal.querySelector('.modal-dialog');
+        if (dlg) dlg.scrollTop = 0;
+        cardModal.scrollTop = 0;
     }
 
     function closeSpecimenModal() {
         if (!cardModal) return;
-        cardModal.style.display = 'none';
-        document.body.style.overflow = '';
+        hideModal(cardModal);
     }
 
     btnCloseCardModal?.addEventListener('click', closeSpecimenModal);
@@ -484,16 +559,13 @@ btnReset?.addEventListener('click', () => {
     // ==========================================
     function toggleObservationModal(show) {
         if (!observationModal) return;
-        observationModal.style.display = show ? 'flex' : 'none';
+        if (show) showModal(observationModal); else hideModal(observationModal);
         if (show) {
-            document.body.style.overflow = 'hidden';
             formAddSpecimen?.reset();
             highResPhotoBase64 = "";
             if (previewWrap) previewWrap.style.display = 'none';
             if (gpsStatusMsg) gpsStatusMsg.textContent = 'Manual entry active or click "Get Current GPS" during field sampling.';
             document.getElementById('input-botanical')?.focus();
-        } else {
-            document.body.style.overflow = '';
         }
     }
 
@@ -551,8 +623,8 @@ btnReset?.addEventListener('click', () => {
             `"${r.zone || ''}"`,
             `"${r.elevation || ''}"`,
             `"${r.toxicity || 'Safe'}"`,
-            r.coords[0],
-            r.coords[1],
+            getCoords(r)[0],
+            getCoords(r)[1],
             `"${r.iucn || 'LC'}"`,
             `"${(r.notes || '').replace(/"/g, '""')}"`,
             `"${getSpecimenDeepLink(r.id)}"`
@@ -576,7 +648,8 @@ btnReset?.addEventListener('click', () => {
         if (!printStage) return;
 
         const deepLink = getSpecimenDeepLink(item.id);
-        const qrUrl = getQrCodeUrl(deepLink, 140);
+        const qrUrl = buildQrDataUrl(deepLink, 300);
+        const [pLat, pLng] = getCoords(item);
 
         printStage.innerHTML = `
             <div class="plaque-outer-frame">
@@ -604,7 +677,7 @@ btnReset?.addEventListener('click', () => {
                     <div><strong>HABIT:</strong> ${escapeHtml(item.habit || 'N/A')}</div>
                     <div><strong>SECTOR:</strong> ${escapeHtml(item.zone || 'N/A')}</div>
                     <div><strong>ELEVATION:</strong> ${escapeHtml(item.elevation || '820m MSL')}</div>
-                    <div><strong>GPS:</strong> ${item.coords[0].toFixed(5)}°N, ${item.coords[1].toFixed(5)}°E</div>
+                    <div><strong>GPS:</strong> ${pLat.toFixed(5)}°N, ${pLng.toFixed(5)}°E</div>
                     <div><strong>TOXICITY:</strong> ${escapeHtml(item.toxicity || 'Safe')}</div>
                 </div>
 
@@ -620,9 +693,25 @@ btnReset?.addEventListener('click', () => {
             </div>
         `;
 
-        setTimeout(() => {
-            window.print();
-        }, 300);
+        // Only the plaque is printed (scoped by this class in database.css)
+        document.body.classList.add('printing-plaque');
+        const cleanup = () => {
+            document.body.classList.remove('printing-plaque');
+            printStage.innerHTML = '';
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
+
+        const qrImg = printStage.querySelector('img');
+        let printed = false;
+        const go = () => { if (printed) return; printed = true; setTimeout(() => window.print(), 150); };
+        if (qrImg && !qrImg.complete) {
+            qrImg.addEventListener('load', go, { once: true });
+            qrImg.addEventListener('error', go, { once: true });
+            setTimeout(go, 3500); // safety net
+        } else {
+            go();
+        }
     }
 
     function escapeHtml(str) {
