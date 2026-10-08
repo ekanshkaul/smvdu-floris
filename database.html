@@ -106,7 +106,7 @@
             </div>
 
             <!-- Filters Dropdown Button -->
-            <div style="position: relative;">
+            <div class="filters-wrap">
                 <button type="button" id="btn-filters" class="btn-action btn-outline" title="Filter by Ecological Sector, Habit, or Toxicity">
                     <i class="fa-solid fa-sliders"></i> Filters
                 </button>
@@ -121,18 +121,6 @@
                             <option value="Ravine Corridors">Ravine Corridors</option>
                         </select>
                     </div>
-
-<div class="dropdown-section filter-reset-section">
-    <button
-        type="button"
-        id="btn-reset-filters"
-        class="btn-action btn-outline filter-reset-btn"
-        title="Reset all search and filter parameters"
-    >
-        <i class="fa-solid fa-rotate-left"></i>
-        Reset Filters
-    </button>
-</div>
 
                     <div class="dropdown-section">
                         <label for="filter-habit" class="dropdown-label">Plant Habit</label>
@@ -154,10 +142,16 @@
                             <option value="Toxic">Toxic</option>
                         </select>
                     </div>
+
+                    <div class="dropdown-section filter-reset-section">
+                        <button type="button" id="btn-reset-filters" class="btn-action btn-outline filter-reset-btn" title="Reset all search and filter parameters">
+                            <i class="fa-solid fa-rotate-left"></i> Reset Filters
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="filter-dropdown-group" style="margin-left: auto;">
+            <div class="filter-dropdown-group action-btn-group">
                 <button type="button" id="btn-open-modal" class="btn-action">
                     <i class="fa-solid fa-plus"></i> Log Obs.
                 </button>
@@ -277,7 +271,7 @@
                 </div>
 
                 <div class="qr-frame" style="display: inline-block; padding: 10px; background: #ffffff; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
-                    <img id="specimen-qr-image" src="" alt="Specimen QR Code" style="width: 200px; height: 200px; display: block;">
+                    <img id="specimen-qr-image" src="" alt="Specimen QR Code" style="width: 200px; max-width: 100%; height: auto; aspect-ratio: 1 / 1; display: block;">
                 </div>
 
                 <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1.25rem;">
@@ -436,6 +430,7 @@
     </footer>
 
     <!-- Global Scripts: data engine MUST load before database controller -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
     <script src="js/database.js"></script>
