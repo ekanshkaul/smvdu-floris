@@ -136,38 +136,51 @@
     display: none;
 }
 
+/* Plaque page: 6in x 4in landscape (a 4" x 6" card). Top-level at-rule for browser support. */
+@page {
+    size: 6in 4in;
+    margin: 0;
+}
+
 @media print {
-    body * {
-        visibility: hidden;
+    /* Print ONLY the plaque: remove everything else from layout (no blank pages) */
+    body.printing-plaque > *:not(#plaque-print-stage) {
+        display: none !important;
     }
 
-    #plaque-print-stage,
-    #plaque-print-stage * {
-        visibility: visible;
+    html, body.printing-plaque {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: #ffffff !important;
     }
 
-    #plaque-print-stage {
+    body.printing-plaque #plaque-print-stage {
         display: block !important;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        background: #ffffff;
-        padding: 0;
+        position: static;
+        width: 6in;
+        height: 4in;
         margin: 0;
+        padding: 0;
+        background: #ffffff;
     }
 
     .plaque-outer-frame {
-        width: 5.8in;
-        height: 3.8in;
+        width: 6in;
+        height: 4in;
         border: 4px double #1e4620;
-        margin: 0.2in auto;
-        padding: 0.25in;
+        margin: 0;
+        padding: 0.22in;
         box-sizing: border-box;
+        overflow: hidden;
         font-family: 'Georgia', serif;
         position: relative;
         background: #ffffff;
         page-break-inside: avoid;
+        break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
     .plaque-header-sub {
@@ -211,13 +224,15 @@
         font-size: 7.5pt;
         line-height: 1.35;
         color: #333333;
+        max-height: 0.95in;
+        overflow: hidden;
     }
 
     .plaque-footer {
         position: absolute;
         bottom: 0.2in;
-        left: 0.25in;
-        right: 0.25in;
+        left: 0.22in;
+        right: 0.22in;
         display: flex;
         justify-content: space-between;
         font-size: 7pt;
@@ -228,16 +243,97 @@
     }
 }
 
+/* =========================================================
+   MODALS - self-contained so they always open, scroll and close
+   (card inspector, QR tag, observation intake)
+   ========================================================= */
+#specimen-card-modal,
+#specimen-qr-modal,
+#observation-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+    align-items: flex-start;      /* never clip the top of a tall dialog */
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    background: rgba(10, 20, 12, 0.6);
+}
+
+#specimen-card-modal.modal-open,
+#specimen-qr-modal.modal-open,
+#observation-modal.modal-open {
+    display: flex !important;
+}
+
+#specimen-card-modal .modal-dialog,
+#specimen-qr-modal .modal-dialog,
+#observation-modal .modal-dialog {
+    position: relative;
+    width: 100%;
+    margin: auto;                 /* centred when short, top-aligned + scrollable when tall */
+    max-height: none;
+    box-sizing: border-box;
+}
+
+#specimen-qr-modal .qr-frame img {
+    image-rendering: pixelated;
+}
+
+/* Desktop: wrapper hooks that replaced inline styles */
+.filters-wrap {
+    position: relative;
+}
+
+.action-btn-group {
+    margin-left: auto;
+}
+
 /* --- Mobile Responsiveness --- */
 @media (max-width: 680px) {
+    /* Search on its own row, then Filters | Log Obs. | +CSV as three equal buttons */
     .db-filter-console {
-        flex-direction: column;
-        align-items: stretch;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+        padding: 0.9rem;
+        margin-bottom: 1.5rem;
     }
 
-    .filter-dropdown-group {
-        flex-direction: column;
-        align-items: stretch;
+    .search-input-wrap {
+        grid-column: 1 / -1;
+        min-width: 0;
+    }
+
+    .filter-dropdown-group,
+    .action-btn-group {
+        display: contents;        /* its two buttons become direct grid cells */
+        margin-left: 0;
+    }
+
+    .db-filter-console .btn-action,
+    .db-filter-console #btn-filters {
+        width: 100%;
+        min-width: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        padding: 0.6rem 0.4rem;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+
+    .filters-dropdown {
+        width: min(300px, calc(100vw - 2.5rem));
+        min-width: 0;
     }
 
     .select-filter {
@@ -251,6 +347,12 @@
 
     .meta-details-list {
         grid-template-columns: 1fr;
+    }
+
+    #specimen-card-modal,
+    #specimen-qr-modal,
+    #observation-modal {
+        padding: 0.5rem;
     }
 }
 /* --- Table Pagination Controls --- */
