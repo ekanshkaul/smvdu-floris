@@ -250,20 +250,23 @@
 #specimen-card-modal,
 #specimen-qr-modal,
 #observation-modal {
+    display: none;                /* Hidden by default so they never block mobile taps */
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 10000;
-    align-items: flex-start;      /* never clip the top of a tall dialog */
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    align-items: flex-start;
     justify-content: center;
     padding: 1rem;
     box-sizing: border-box;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    background: rgba(10, 20, 12, 0.6);
+    background: rgba(10, 20, 12, 0.7);
 }
 
 #specimen-card-modal.modal-open,
@@ -277,9 +280,10 @@
 #observation-modal .modal-dialog {
     position: relative;
     width: 100%;
-    margin: auto;                 /* centred when short, top-aligned + scrollable when tall */
+    margin: 1.5rem auto;
     max-height: none;
     box-sizing: border-box;
+    pointer-events: auto;
 }
 
 #specimen-qr-modal .qr-frame img {
