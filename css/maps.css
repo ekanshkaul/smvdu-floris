@@ -13,7 +13,7 @@
     margin-bottom: 1.25rem;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 1.25rem;
     box-shadow: var(--shadow-sm);
 }
@@ -23,6 +23,13 @@
     align-items: center;
     gap: 0.65rem;
     flex-wrap: wrap;
+}
+
+.map-control-group:last-child {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .map-control-label {
@@ -275,47 +282,7 @@
     box-shadow: var(--shadow-sm) !important;
 }
 
-/* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
-    .map-control-strip {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .map-control-group {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .map-viewport-container {
-        height: 480px;
-    }
-
-    .map-sidebar {
-        top: 8px;
-        right: 8px;
-        left: 8px;
-        width: auto;
-        max-height: 50%;
-    }
-}
-/* --- Fix Toolbar Alignment into a Single Row --- */
-.map-control-strip {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    gap: 1.25rem;
-}
-
-.map-control-group:last-child {
-    margin-left: auto;
-    display: flex;
-    gap: 0.5rem;
-    flex-shrink: 0;
-}
-
-/* --- Fix Marker Cluster Visual Nodes --- */
+/* --- Marker Cluster Visual Nodes --- */
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
@@ -365,6 +332,7 @@
     font-family: 'Inter', system-ui, sans-serif !important;
     background: var(--bg-secondary);
 }
+
 /* --- Field State Recovery Notification Toast --- */
 .field-restore-toast {
     position: fixed;
@@ -402,15 +370,15 @@
     from { opacity: 0; transform: translate(-50%, 15px); }
     to { opacity: 1; transform: translate(-50%, 0); }
 }
-/* =========================================================
-   SMVDU Floris: Compact Mobile Maps & Toast Overrides
-   ========================================================= */
 
+/* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
-    /* Make toolbar pills fit horizontally or wrap neatly */
     .map-control-strip {
         padding: 0.5rem 0.75rem;
         gap: 0.5rem;
+        flex-direction: column;
+        align-items: stretch;
+        flex-wrap: wrap;
     }
 
     .map-control-group {
@@ -428,13 +396,23 @@
         font-size: 0.72rem;
     }
 
-    /* Compact Pinpoint bar */
     .pinpoint-bar {
         font-size: 0.76rem;
         padding: 0.35rem 0.65rem;
     }
 
-    /* Scale down the Session Recovery Toast so it doesn't clip on small screens */
+    .map-viewport-container {
+        height: 480px;
+    }
+
+    .map-sidebar {
+        top: 8px;
+        right: 8px;
+        left: 8px;
+        width: auto;
+        max-height: 50%;
+    }
+
     .field-restore-toast {
         width: 90%;
         max-width: 340px;
@@ -457,6 +435,7 @@
         font-size: 0.7rem;
     }
 }
+
 /* =========================================================
    SMVDU Floris: Maps Dark Mode Surface Overrides
    ========================================================= */
@@ -478,12 +457,51 @@
     color: var(--text-dark) !important;
 }
 
-/* Fix table row highlighting in map research table */
+/* Sector Inspector Sidebar & Tile Dark Mode Support */
+[data-theme="dark"] .map-sidebar {
+    background: rgba(22, 27, 34, 0.95);
+    border-color: var(--border-color);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .sidebar-header {
+    background: var(--surface);
+    border-bottom-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .sidebar-header h3 {
+    color: var(--primary-light, #4ade80);
+}
+
+[data-theme="dark"] #btn-close-sidebar {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] #btn-close-sidebar:hover {
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] #sidebar-sector-desc {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .sidebar-toggle-btn {
+    background: var(--surface);
+    color: var(--text-dark);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .sidebar-toggle-btn:hover {
+    background: var(--bg-hover);
+    color: var(--primary-light, #4ade80);
+}
+
+/* Table row highlighting in map research table */
 [data-theme="dark"] .table-scroll tr:hover td {
     background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-/* --- Leaflet Zoom Control: theme-aware (Leaflet's own CSS ships un-themed) --- */
+/* --- Leaflet Zoom Control: theme-aware --- */
 .leaflet-control-zoom {
     border: 1px solid var(--border-color) !important;
     box-shadow: var(--shadow-md) !important;
@@ -504,7 +522,7 @@
     border-color: var(--border-color) !important;
 }
 
-/* --- Settings Dropdown Menu (Map Layer Selection + Advanced) --- */
+/* --- Settings Dropdown Menu --- */
 .map-settings-dropdown {
     position: absolute;
     top: 100%;
@@ -609,12 +627,13 @@
     color: var(--primary-light);
 }
 
-/* Leaflet popups (specimen click-through) */
+/* Leaflet popups */
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
     background: var(--surface) !important;
     color: var(--text-dark) !important;
 }
+
 /* Icon-only action button sizing */
 .btn-icon-only {
     width: 36px;
