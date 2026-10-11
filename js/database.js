@@ -143,34 +143,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return getQrCodeUrl(text, px);
     }
 
-    // Helpers: modal open/close that never leave the page scroll-locked
+    // Helpers: modal open/close that work smoothly on desktop and mobile touch devices
     function showModal(el) {
         if (!el) return;
-        // Re-parent to <html> so no transformed/filtered ancestor (e.g. body) can break position:fixed
-        if (el.parentNode !== document.documentElement) document.documentElement.appendChild(el);
-        el.classList.add('modal-open');
-        el.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-
-        // Safety net: if it still isn't pinned to the viewport, pin it manually
-        const r = el.getBoundingClientRect();
-        if (Math.abs(r.top) > 1 || Math.abs(r.left) > 1 || r.height < window.innerHeight - 2) {
-            el.style.position = 'absolute';
-            el.style.bottom = 'auto';
-            el.style.right = 'auto';
-            el.style.width = window.innerWidth + 'px';
-            el.style.height = window.innerHeight + 'px';
-            el.style.top = (window.pageYOffset) + 'px';
-            el.style.left = (window.pageXOffset) + 'px';
+        // Ensure modal is directly inside <body> to prevent z-index/transform clipping
+        if (el.parentNode !== document.body) {
+            document.body.appendChild(el);
         }
+        el.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
     }
+
     function hideModal(el) {
         if (!el) return;
         el.classList.remove('modal-open');
-        el.style.display = 'none';
-        ['position','top','left','right','bottom','width','height'].forEach(p => el.style[p] = '');
         const anyOpen = [cardModal, qrModal, observationModal].some(m => m && m.classList.contains('modal-open'));
-        if (!anyOpen) document.body.style.overflow = '';
+        if (!anyOpen) {
+            document.body.style.overflow = '';
+        }
     }
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
