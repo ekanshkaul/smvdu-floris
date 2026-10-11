@@ -649,3 +649,50 @@
     font-size: 0.9rem;
     margin: 0;
 }
+
+/* =========================================================
+   FORCED CONTRAST OVERRIDES: Map Sector Inspector
+   ========================================================= */
+
+/* Ensure the sidebar tile container is truly dark in dark mode */
+[data-theme="dark"] .map-sidebar,
+html[data-theme="dark"] .map-sidebar {
+    background: #161b22 !important; /* Solid dark background to prevent bleed-through */
+    border-color: #30363d !important;
+}
+
+[data-theme="dark"] .sidebar-header,
+html[data-theme="dark"] .sidebar-header {
+    background: #0d1117 !important;
+    border-bottom: 1px solid #30363d !important;
+}
+
+/* Force description paragraph color */
+[data-theme="dark"] #sidebar-sector-desc,
+html[data-theme="dark"] #sidebar-sector-desc {
+    color: #8b949e !important;
+}
+
+/* Force the labels (DOMINANT CANOPY, AREA & ELEVATION, etc.) */
+[data-theme="dark"] .map-sidebar .meta-key,
+html[data-theme="dark"] .map-sidebar .meta-key {
+    color: #8b949e !important;
+}
+
+/* Force the values (Chir Pine..., ~190 Hectares..., Sandstone-clay...) */
+[data-theme="dark"] .map-sidebar .meta-val,
+html[data-theme="dark"] .map-sidebar .meta-val {
+    color: #e6edf3 !important;
+}
+
+/* Keep borders between rows clean and visible in dark mode */
+[data-theme="dark"] .map-sidebar .meta-row,
+html[data-theme="dark"] .map-sidebar .meta-row {
+    border-bottom: 1px solid #21262d !important;
+}
+
+/* Accent highlight for the species count */
+[data-theme="dark"] #sidebar-specimen-count,
+html[data-theme="dark"] #sidebar-specimen-count {
+    color: #4ade80 !important;
+}
